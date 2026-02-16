@@ -1,37 +1,51 @@
 pipeline {
     agent any
-    
+
     stages {
+
         stage('Checkout') {
             steps {
                 echo '📥 Checking out source code...'
                 checkout scm
-                
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo '🔨 Building Docker images...'
                 sh '''
-                    echo "✅ Checkout successful!"
-                    echo "Current branch: $(git branch --show-current)"
-                    git log -1 --oneline
+                    docker build -t voting-app-vote ./vote
+                    docker build -t voting-app-result ./result
+                    docker build -t voting-app-worker ./worker
                 '''
             }
         }
-        
-        stage('Verify Repository') {
+
+        stage('Unit Tests') {
             steps {
-                echo '🔍 Verifying repository...'
+                echo '🧪 Running tests (placeholder)...'
                 sh '''
-                    ls -la
-                    ls -d vote result worker
-                    echo "✅ All services found!"
+                    echo "No unit tests configured yet"
+                '''
+            }
+        }
+
+        stage('Package') {
+            steps {
+                echo '📦 Verifying built images...'
+                sh '''
+                    docker images | grep voting-app
                 '''
             }
         }
     }
-    
+
     post {
         success {
-            echo '✅ Task #11 Complete!'
+            echo '✅ Task #13 Complete!'
+        }
+        failure {
+            echo '❌ Build failed!'
         }
     }
 }
-
-
