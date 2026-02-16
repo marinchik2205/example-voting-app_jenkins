@@ -14,11 +14,11 @@ services:
       - -c
       - |
         echo "Scanning images for vulnerabilities..."
-        trivy image --severity HIGH,CRITICAL voting-app_vote:latest
-        trivy image --severity HIGH,CRITICAL voting-app_result:latest
-        trivy image --severity HIGH,CRITICAL voting-app_worker:latest
+        trivy image --severity HIGH,CRITICAL --exit-code 1 voting-app_vote:latest
+        trivy image --severity HIGH,CRITICAL --exit-code 1 voting-app_result:latest
+        trivy image --severity HIGH,CRITICAL --exit-code 1 voting-app_worker:latest
         echo "Scanning filesystem..."
-        trivy fs --severity HIGH,CRITICAL /scans
+        trivy fs --severity HIGH,CRITICAL --exit-code 1 /scans
         echo "Scan complete. Check results above."
     depends_on:
       - vote
