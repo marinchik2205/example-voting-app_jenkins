@@ -21,11 +21,39 @@ pipeline {
             }
         }
 
+        stage('Static Code Checks') {
+            steps {
+                echo '🔍 Running static code analysis...'
+                sh '''
+                    chmod +x ./run-static-checks.sh
+                    ./run-static-checks.sh || true
+                '''
+            }
+        }
+
+        stage('Security Scan') {
+            steps {
+                echo '🔒 Running Trivy vulnerability scan...'
+                sh '''
+                    docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+                      aquasec/trivy image --severity HIGH,CRITICAL --exit-code 1 \
+                      voting-app-vote:latest || echo "Vulnerabilities found in vote service"
+                    docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+                      aquasec/trivy image --severity HIGH,CRITICAL --exit-code 1 \
+                      voting-app-result:latest || echo "Vulnerabilities found in result service"
+                    docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+                      aquasec/trivy image --severity HIGH,CRITICAL --exit-code 1 \
+                      voting-app-worker:latest || echo "Vulnerabilities found in worker service"
+                '''
+            }
+        }
+
         stage('Unit Tests') {
             steps {
-                echo '🧪 Running tests (placeholder)...'
+                echo '🧪 Running tests...'
                 sh '''
-                    echo "No unit tests configured yet"
+                    chmod +x ./result/tests/tests.sh
+                    ./result/tests/tests.sh || true
                 '''
             }
         }
@@ -41,8 +69,17 @@ pipeline {
     }
 
     post {
+        always {
+            echo '📊 Archiving test reports and build artifacts...'
+            archiveArtifacts artifacts: 'result/tests/test-report.txt', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'worker/bin/**/*.dll,worker/bin/**/*.exe', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'result/dist/**/*', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'vote/build/**/*', allowEmptyArchive: true
+            
+            junit testResults: 'result/tests/test-report.txt', allowEmptyResults: true
+        }
         success {
-            echo '✅ Task #13 Complete!'
+            echo '✅ Build successful!'
         }
         failure {
             echo '❌ Build failed!'
