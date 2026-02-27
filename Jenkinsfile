@@ -83,6 +83,9 @@ pipeline {
                     chmod +x ./result/tests/tests.sh
                     ./result/tests/tests.sh || true
                 '''
+            }
+        }
+
         stage('Build (Parallel)') {
             parallel {
 
@@ -138,6 +141,4 @@ pipeline {
             archiveArtifacts artifacts: 'test-report.txt', allowEmptyArchive: false
         }
     }
-}
-
 }
