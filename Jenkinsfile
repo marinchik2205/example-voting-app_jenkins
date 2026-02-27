@@ -11,13 +11,11 @@ pipeline {
             steps {
                 checkout scm
                 script {
-                    IMAGE_TAG = sh(
-                        script: "git rev-parse --short HEAD",
-                        returnStdout: true
-                    ).trim()
-                }
-            }
-        }
+    env.IMAGE_TAG = sh(
+        script: "git rev-parse --short HEAD",
+        returnStdout: true
+    ).trim()
+}
 
         stage('Build') {
             steps {
