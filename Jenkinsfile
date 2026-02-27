@@ -23,10 +23,10 @@ pipeline {
             steps {
                 echo 'Building Docker images'
                 sh '''
-                  docker build -t voting-app-vote:${IMAGE_TAG} ./vote
-                  docker build -t voting-app-result:${IMAGE_TAG} ./result
-                  docker build -t voting-app-worker:${IMAGE_TAG} ./worker
-                '''
+  docker build -t voting-app-vote:latest ./vote
+  docker build -t voting-app-result:latest ./result
+  docker build -t voting-app-worker:latest ./worker
+'''
             }
         }
 
