@@ -53,7 +53,6 @@ pipeline {
                 echo 'Running Trivy scan'
                 sh '''
                 mkdir -p reports
-
                 docker run --rm \
                   -v /var/run/docker.sock:/var/run/docker.sock \
                   -v $(pwd)/reports:/reports \
