@@ -47,7 +47,6 @@ pipeline {
                         sh "docker build -t voting-app-worker:${IMAGE_TAG} ./worker"
                     }
                 }
-
             }
         }
 
@@ -59,14 +58,6 @@ pipeline {
                 '''
             }
         }
-        stage('Build (Parallel)') {
-            parallel {
-
-                stage('Vote') {
-                    steps {
-                        sh "docker build -t voting-app-vote:${IMAGE_TAG} ./vote"
-                    }
-                }
 
         stage('Security Scan') {
             steps {
@@ -79,11 +70,6 @@ pipeline {
                 '''
             }
         }
-                stage('Result') {
-                    steps {
-                        sh "docker build -t voting-app-result:${IMAGE_TAG} ./result"
-                    }
-                }
 
         stage('Tests') {
             steps {
@@ -93,11 +79,9 @@ pipeline {
                 '''
             }
         }
-
     }
 
     post {
-
         always {
             archiveArtifacts artifacts: '**/*.txt', allowEmptyArchive: true
         }
@@ -109,10 +93,5 @@ pipeline {
         failure {
             echo 'BUILD FAILED'
         }
-
     }
 }
-
-                stage('Worker') {
-                    steps {
-                       
