@@ -4,7 +4,7 @@ pipeline {
     parameters {
         choice(
             name: 'ENVIRONMENT',
-            choices: ['dev', 'staging', 'prod'],
+            choices: ['dev','staging','prod'],
             description: 'Target deployment environment'
         )
     }
@@ -54,8 +54,8 @@ pipeline {
         stage('Static Checks') {
             steps {
                 sh '''
-                    chmod +x ./run-static-checks.sh
-                    ./run-static-checks.sh || true
+                chmod +x ./run-static-checks.sh
+                ./run-static-checks.sh || true
                 '''
             }
         }
@@ -63,11 +63,11 @@ pipeline {
         stage('Security Scan') {
             steps {
                 sh '''
-                    mkdir -p reports
-                    docker run --rm \
-                      -v /var/run/docker.sock:/var/run/docker.sock \
-                      -v $(pwd)/reports:/reports \
-                      aquasec/trivy image voting-app-vote:${IMAGE_TAG} || true
+                mkdir -p reports
+                docker run --rm \
+                  -v /var/run/docker.sock:/var/run/docker.sock \
+                  -v $(pwd)/reports:/reports \
+                  aquasec/trivy image voting-app-vote:${IMAGE_TAG} || true
                 '''
             }
         }
@@ -75,8 +75,8 @@ pipeline {
         stage('Tests') {
             steps {
                 sh '''
-                    echo "Running tests"
-                    echo "Tests passed" > test-report.txt
+                echo "Running tests"
+                echo "Tests passed" > test-report.txt
                 '''
             }
         }
@@ -96,5 +96,6 @@ pipeline {
         failure {
             echo 'BUILD FAILED'
         }
+
     }
 }
