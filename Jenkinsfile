@@ -1,14 +1,6 @@
 pipeline {
     agent any
 
-    parameters {
-        choice(
-            name: 'ENVIRONMENT',
-            choices: ['dev', 'staging', 'prod'],
-            description: 'Target deployment environment'
-        )
-    }
-
     environment {
         IMAGE_TAG = ''
     }
