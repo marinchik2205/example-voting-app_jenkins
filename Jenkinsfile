@@ -47,6 +47,7 @@ pipeline {
                         sh "docker build -t voting-app-worker:${IMAGE_TAG} ./worker"
                     }
                 }
+
             }
         }
 
