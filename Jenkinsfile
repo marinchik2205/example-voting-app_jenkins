@@ -1,6 +1,18 @@
 pipeline {
     agent any
 
+    parameters {
+        choice(
+            name: 'ENVIRONMENT',
+            choices: ['dev', 'staging', 'prod'],
+            description: 'Target deployment environment'
+        )
+    }
+
+    environment {
+        IMAGE_TAG = ''
+    }
+
     stages {
 
         stage('Checkout') {
@@ -52,7 +64,6 @@ pipeline {
             steps {
                 sh '''
                     mkdir -p reports
-
                     docker run --rm \
                       -v /var/run/docker.sock:/var/run/docker.sock \
                       -v $(pwd)/reports:/reports \
