@@ -40,7 +40,6 @@ pipeline {
 
         stage('Static Checks') {
             steps {
-                echo 'Running static checks'
                 sh '''
                 chmod +x ./run-static-checks.sh
                 ./run-static-checks.sh || true
@@ -50,7 +49,6 @@ pipeline {
 
         stage('Security Scan') {
             steps {
-                echo 'Running Trivy security scan'
                 sh '''
                 mkdir -p reports
                 docker run --rm \
@@ -63,7 +61,6 @@ pipeline {
 
         stage('Tests') {
             steps {
-                echo 'Running tests'
                 sh '''
                 echo "Running tests" > test-report.txt
                 echo "Tests passed" >> test-report.txt
@@ -76,7 +73,6 @@ pipeline {
     post {
 
         always {
-            echo 'Archiving artifacts'
             archiveArtifacts artifacts: '**/*.txt', allowEmptyArchive: true
         }
 
