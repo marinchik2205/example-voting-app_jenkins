@@ -1,6 +1,14 @@
 pipeline {
     agent any
 
+    parameters {
+        choice(
+            name: 'ENVIRONMENT',
+            choices: ['dev','staging','prod'],
+            description: 'Target deployment environment'
+        )
+    }
+
     stages {
 
         stage('Checkout') {
@@ -11,7 +19,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo "Building project"
+                echo "Building application"
             }
         }
 
@@ -27,7 +35,6 @@ pipeline {
         success {
             echo "BUILD SUCCESS"
         }
-
         failure {
             echo "BUILD FAILED"
         }
